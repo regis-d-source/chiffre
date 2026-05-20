@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Chiffre">
+<title>Chiffre</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#F5F4F0;font-family:'Outfit','Helvetica Neue',sans-serif;min-height:100vh;padding-bottom:40px;max-width:430px;margin:0 auto}
+.header{background:#111;padding:52px 20px 0;position:sticky;top:0;z-index:100}
+.h-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.title{font-size:30px;font-weight:900;color:#fff;letter-spacing:-1.2px;line-height:1}
+.sub{font-size:11px;color:#555;margin-top:5px;display:flex;align-items:center;gap:6px}
+.dot{width:7px;height:7px;border-radius:50%;background:#30D158;flex-shrink:0}
+.m-row{display:flex;align-items:center;gap:8px}
+.m-btn{background:#222;border:none;color:#fff;width:30px;height:30px;border-radius:9px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.m-lbl{color:#fff;font-size:13px;font-weight:700;min-width:120px;text-align:center}
+.tabs{display:flex;margin-top:16px}
+.tab{flex:1;padding:10px 2px;text-align:center;font-size:10px;font-weight:700;letter-spacing:.8px;color:#444;border-bottom:2px solid #222;cursor:pointer;background:none;border:none;border-bottom:2px solid #222}
+.tab.active{color:#FF9F0A;border-bottom:2px solid #FF9F0A}
+.body{padding:16px 16px 0}
+.view{display:none}.view.active{display:block}
+.hero{background:#111;border-radius:22px;padding:22px;margin-bottom:14px;margin-top:16px;position:relative;overflow:hidden}
+.hero-deco{position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,159,10,.07)}
+.hero-lbl{font-size:10px;color:#555;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px}
+.hero-amt{font-size:48px;font-weight:900;color:#FF9F0A;letter-spacing:-2px;line-height:1}
+.hero-sub{font-size:12px;color:#555;margin-top:8px}
+.hero-progress{margin-top:14px}
+.hero-progress-bar{background:#222;border-radius:99px;height:4px;margin-top:6px;overflow:hidden}
+.hero-progress-fill{height:100%;border-radius:99px;background:#FF9F0A;transition:width .4s ease}
+.hero-progress-lbl{display:flex;justify-content:space-between;font-size:10px;color:#555}
+.card{background:#fff;border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-t{font-size:13px;font-weight:700;color:#111;margin-bottom:14px}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.fw{display:flex;flex-direction:column;gap:5px}
+.lbl{font-size:10px;color:#aaa;font-weight:600;text-transform:uppercase;letter-spacing:.8px}
+input[type=number],input[type=time]{background:#F5F4F0;border:1.5px solid transparent;border-radius:12px;color:#111;font-family:inherit;font-size:16px;padding:11px 12px;width:100%;outline:none;font-weight:600;-webkit-appearance:none}
+input:focus{border-color:#FF9F0A}
+.dur-badge{background:#F5F4F0;border-radius:12px;padding:11px 12px;font-size:16px;font-weight:800;text-align:center;color:#ccc}
+.dur-badge.active{color:#FF9F0A}
+.btn-add{background:#111;color:#FF9F0A;border:none;border-radius:14px;padding:15px;font-family:inherit;font-size:15px;font-weight:800;width:100%;cursor:pointer;margin-top:4px;letter-spacing:.5px}
+.btn-dup{background:#F5F4F0;color:#111;border:none;border-radius:12px;padding:11px;font-family:inherit;font-size:13px;font-weight:700;width:100%;cursor:pointer;margin-bottom:10px}
+.day-card{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.day-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.day-dot.good{background:#30D158}
+.day-dot.avg{background:#FF9F0A}
+.day-dot.low{background:#FF453A}
+.day-num{background:#F5F4F0;border-radius:10px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#111;flex-shrink:0}
+.day-info{flex:1}
+.day-crs{font-size:13px;font-weight:700;color:#111;margin-bottom:2px}
+.day-hr{font-size:11px;color:#aaa;font-weight:500}
+.day-amt{font-size:20px;font-weight:900;color:#FF9F0A;letter-spacing:-.5px;white-space:nowrap}
+.del-btn{background:none;border:none;color:#ddd;font-size:22px;cursor:pointer;padding:4px;line-height:1;flex-shrink:0}
+.s-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.s-card{background:#fff;border-radius:18px;padding:18px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.s-card.dark{background:#111}
+.s-lbl{font-size:10px;color:#aaa;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.s-card.dark .s-lbl{color:#444}
+.s-val{font-size:28px;font-weight:900;color:#111;letter-spacing:-1.2px}
+.s-card.dark .s-val{color:#FF9F0A}
+.s-sub{font-size:11px;color:#bbb;margin-top:4px;font-weight:500}
+.s-card.dark .s-sub{color:#444}
+.obj-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.obj-input{background:#F5F4F0;border:1.5px solid transparent;border-radius:10px;color:#111;font-family:inherit;font-size:15px;padding:8px 12px;width:130px;outline:none;font-weight:700;-webkit-appearance:none}
+.obj-input:focus{border-color:#FF9F0A}
+.exp-pre{font-size:12px;color:#555;line-height:2;font-family:'SF Mono','Courier New',monospace;white-space:pre-wrap;word-break:break-word}
+.btn-copy{background:#FF9F0A;color:#fff;border:none;border-radius:14px;padding:15px;font-family:inherit;font-size:15px;font-weight:800;width:100%;cursor:pointer;margin-top:12px}
+.empty{text-align:center;padding:50px 0;color:#ccc;font-size:14px}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:10px 22px;border-radius:20px;font-size:13px;font-weight:600;z-index:9999;white-space:nowrap;opacity:0;transition:opacity .25s;pointer-events:none;font-family:inherit}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="h-row">
+    <div>
+      <div class="title">Chiffre</div>
+      <div class="sub"><span class="dot"></span><span id="sync-txt">Pret</span></div>
+    </div>
+    <div class="m-row">
+      <button class="m-btn" onclick="changeMonth(-1)">&#8249;</button>
+      <div class="m-lbl" id="m-lbl"></div>
+      <button class="m-btn" onclick="changeMonth(1)">&#8250;</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('saisie')">+ SAISIE</button>
+    <button class="tab" onclick="showTab('jours')">JOURS</button>
+    <button class="tab" onclick="showTab('stats')">STATS</button>
+    <button class="tab" onclick="showTab('export')">EXPORT</button>
+  </div>
+</div>
+<div class="body">
+  <div class="view active" id="view-saisie">
+    <div class="hero">
+      <div class="hero-deco"></div>
+      <div class="hero-lbl">Total du mois</div>
+      <div class="hero-amt" id="hero-amt">0&#8364;</div>
+      <div class="hero-sub" id="hero-sub">Aucune journee encore</div>
+      <div class="hero-progress" id="hero-progress" style="display:none">
+        <div class="hero-progress-lbl">
+          <span id="prog-lbl">Objectif</span>
+          <span id="prog-pct">0%</span>
+        </div>
+        <div class="hero-progress-bar"><div class="hero-progress-fill" id="prog-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-t">Nouvelle journee</div>
+      <button class="btn-dup" id="btn-dup" onclick="dupYesterday()" style="display:none">Dupliquer la derniere journee</button>
+      <div class="r2">
+        <div class="fw"><label class="lbl">Jour</label><input type="number" id="f-day" min="1" max="31" placeholder="19"></div>
+        <div class="fw"><label class="lbl">Courses</label><input type="number" id="f-courses" placeholder="10"></div>
+      </div>
+      <div class="r3">
+        <div class="fw"><label class="lbl">Debut</label><input type="time" id="f-start" value="09:00" onchange="calcDur()"></div>
+        <div class="fw"><label class="lbl">Fin</label><input type="time" id="f-end" value="18:00" onchange="calcDur()"></div>
+        <div class="fw"><label class="lbl">Duree</label><div class="dur-badge active" id="dur-badge">9h00</div></div>
+      </div>
+      <div class="r2">
+        <div class="fw"><label class="lbl">Chiffre</label><input type="number" id="f-amount" placeholder="850"></div>
+        <div class="fw"><label class="lbl">Tps travail</label><input type="time" id="f-workdur"></div>
+      </div>
+      <button class="btn-add" onclick="addDay()">AJOUTER LA JOURNEE</button>
+    </div>
+  </div>
+  <div class="view" id="view-jours"><div style="margin-top:16px" id="days-list"></div></div>
+  <div class="view" id="view-stats"><div style="margin-top:16px" id="stats-content"></div></div>
+  <div class="view" id="view-export">
+    <div style="margin-top:16px">
+      <div class="card">
+        <pre class="exp-pre" id="exp-pre">Aucune donnee.</pre>
+        <button class="btn-copy" onclick="copyExport()">COPIER LE TEXTE</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+var MONTHS=['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre'];
+var now=new Date();
+var year=now.getFullYear(),month=now.getMonth();
+function t2m(t){if(!t)return 0;var p=t.split(':');return parseInt(p[0])*60+parseInt(p[1]||0)}
+function m2s(m){if(!m||m<=0)return'0h00';return Math.floor(m/60)+'h'+(m%60<10?'0':'')+m%60}
+function mk(y,mo){return'chiffre_'+(y||year)+'_'+(mo!==undefined?mo:month)}
+function load(y,mo){try{return JSON.parse(localStorage.getItem(mk(y,mo)))||[]}catch(e){return[]}}
+function save(d){localStorage.setItem(mk(),JSON.stringify(d))}
+function getObj(){return parseFloat(localStorage.getItem('chiffre_obj'))||0}
+function setObj(v){localStorage.setItem('chiffre_obj',v)}
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
+function calcDur(){
+  var s=document.getElementById('f-start').value;
+  var e=document.getElementById('f-end').value;
+  var d=t2m(e)-t2m(s);
+  var b=document.getElementById('dur-badge');
+  if(d>0){b.textContent=m2s(d);b.classList.add('active');
+    var h=Math.floor(d/60),mn=d%60;
+    document.getElementById('f-workdur').value=(h<10?'0':'')+h+':'+(mn<10?'0':'')+mn;
+  }else{b.textContent='--';b.classList.remove('active')}
+}
+function getColor(amount,avg){
+  if(amount>=avg*1.1)return'good';
+  if(amount>=avg*0.9)return'avg';
+  return'low';
+}
+function dupYesterday(){
+  var days=load();
+  if(!days.length)return;
+  var last=days[days.length-1];
+  document.getElementById('f-courses').value=last.courses;
+  document.getElementById('f-start').value=last.start;
+  document.getElementById('f-end').value=last.end;
+  if(last.workdur)document.getElementById('f-workdur').value=last.workdur;
+  calcDur();
+  showToast('Derniere journee dupliquee');
+}
+function updateMonthLabel(){document.getElementById('m-lbl').textContent=MONTHS[month]+' '+year}
+function changeMonth(dir){
+  month+=dir;
+  if(month<0){month=11;year--}
+  if(month>11){month=0;year++}
+  updateMonthLabel();renderAll();
+}
+function addDay(){
+  var d=parseInt(document.getElementById('f-day').value);
+  var c=parseInt(document.getElementById('f-courses').value);
+  var s=document.getElementById('f-start').value;
+  var e=document.getElementById('f-end').value;
+  var a=parseFloat(document.getElementById('f-amount').value);
+  var w=document.getElementById('f-workdur').value;
+  var dur=t2m(e)-t2m(s);
+  if(!d||isNaN(c)||!s||!e||isNaN(a)||a<=0){showToast('Remplis tous les champs');return}
+  var days=load();
+  var entry={day:d,courses:c,start:s,end:e,amount:a,workdur:w,durMins:dur};
+  var updated=days.filter(function(x){return x.day!==d});
+  updated.push(entry);
+  updated.sort(function(a,b){return a.day-b.day});
+  save(updated);
+  document.getElementById('f-day').value='';
+  document.getElementById('f-courses').value='';
+  document.getElementById('f-amount').value='';
+  showToast('Journee ajoutee !');
+  renderAll();showTab('jours');
+}
+function deleteDay(day){
+  var updated=load().filter(function(d){return d.day!==day});
+  save(updated);showToast('Supprime');renderAll();
+}
+function renderHero(){
+  var days=load(),n=days.length;
+  var total=days.reduce(function(s,d){return s+d.amount},0);
+  var courses=days.reduce(function(s,d){return s+d.courses},0);
+  // Compare previous month
+  var pm=month-1,py=year;
+  if(pm<0){pm=11;py--}
+  var prevDays=load(py,pm);
+  var prevTotal=prevDays.reduce(function(s,d){return s+d.amount},0);
+  var arrow='';
+  if(prevTotal>0&&n>0){
+    var ratio=total/prevTotal;
+    arrow=ratio>=1?' &#8593;':' &#8595;';
+  }
+  document.getElementById('hero-amt').textContent=Math.round(total).toLocaleString('fr')+'€'+arrow;
+  // Projection
+  var proj='';
+  if(n>0){
+    var daysInMonth=new Date(year,month+1,0).getDate();
+    var projected=Math.round((total/n)*daysInMonth);
+    proj=' · proj. '+projected.toLocaleString('fr')+'€';
+  }
+  document.getElementById('hero-sub').textContent=n>0?n+' jours · moy '+Math.round(total/n)+'€/j · '+courses+' courses'+proj:'Aucune journee encore';
+  document.getElementById('sync-txt').textContent=n+' jour'+(n!==1?'s':'');
+  // Progress bar
+  var obj=getObj();
+  var progEl=document.getElementById('hero-progress');
+  if(obj>0&&n>0){
+    var pct=Math.min(100,Math.round((total/obj)*100));
+    document.getElementById('prog-fill').style.width=pct+'%';
+    document.getElementById('prog-pct').textContent=pct+'%';
+    document.getElementById('prog-lbl').textContent='Objectif '+Math.round(obj).toLocaleString('fr')+'€';
+    progEl.style.display='block';
+  }else{progEl.style.display='none'}
+  // Dup button
+  document.getElementById('btn-dup').style.display=n>0?'block':'none';
+}
+function renderDays(){
+  var days=load(),el=document.getElementById('days-list');
+  if(!days.length){el.innerHTML='<div class="empty"><div style="font-size:42px;margin-bottom:10px">&#128587;</div>Aucune journee ce mois-ci</div>';return}
+  var avg=days.reduce(function(s,d){return s+d.amount},0)/days.length;
+  el.innerHTML=days.map(function(d){
+    var c=getColor(d.amount,avg);
+    return'<div class="day-card"><div class="day-dot '+c+'"></div><div class="day-num">'+(d.day<10?'0':'')+d.day+'</div><div class="day-info"><div class="day-crs">'+d.courses+' courses · '+d.start.replace(':','h')+'–'+d.end.replace(':','h')+'</div><div class="day-hr">'+(d.workdur?d.workdur.replace(':','h'):m2s(d.durMins))+' travaille</div></div><div class="day-amt">'+Math.round(d.amount)+'€</div><button class="del-btn" onclick="deleteDay('+d.day+')">×</button></div>';
+  }).join('');
+}
+function renderStats(){
+  var days=load(),n=days.length,el=document.getElementById('stats-content');
+  if(!n){el.innerHTML='<div class="empty"><div style="font-size:42px;margin-bottom:10px">&#128202;</div>Pas encore de donnees</div>';return}
+  var total=days.reduce(function(s,d){return s+d.amount},0);
+  var courses=days.reduce(function(s,d){return s+d.courses},0);
+  var mins=days.reduce(function(s,d){return s+(d.durMins||0)},0);
+  var best=days.reduce(function(a,b){return a.amount>b.amount?a:b});
+  var worst=days.reduce(function(a,b){return a.amount<b.amount?a:b});
+  var daysInMonth=new Date(year,month+1,0).getDate();
+  var projected=n>0?Math.round((total/n)*daysInMonth):0;
+  // Prev month compare
+  var pm=month-1,py=year;
+  if(pm<0){pm=11;py--}
+  var prevDays=load(py,pm);
+  var prevTotal=prevDays.reduce(function(s,d){return s+d.amount},0);
+  var compareHtml='';
+  if(prevTotal>0){
+    var diff=total-prevTotal;
+    var sign=diff>=0?'+':'';
+    var col=diff>=0?'#30D158':'#FF453A';
+    compareHtml='<div class="s-card" style="margin-bottom:10px"><div class="s-lbl">vs '+MONTHS[pm]+'</div><div class="s-val" style="font-size:20px;color:'+col+'">'+sign+Math.round(diff).toLocaleString('fr')+'€</div><div class="s-sub">'+MONTHS[pm]+' : '+Math.round(prevTotal).toLocaleString('fr')+'€</div></div>';
+  }
+  // Objectif
+  var obj=getObj();
+  var objHtml='<div class="card" style="margin-bottom:12px"><div class="obj-row"><span style="font-size:13px;font-weight:700;color:#111">Objectif mensuel</span><input class="obj-input" type="number" id="obj-inp" placeholder="10000" value="'+(obj||'')+'" onchange="saveObj()"></div></div>';
+  el.innerHTML=objHtml+'<div class="s-grid"><div class="s-card dark"><div class="s-lbl">Total mois</div><div class="s-val">'+Math.round(total).toLocaleString('fr')+'€</div><div class="s-sub">'+n+' jours</div></div><div class="s-card"><div class="s-lbl">Moy / jour</div><div class="s-val">'+Math.round(total/n)+'€</div><div class="s-sub">par journee</div></div><div class="s-card"><div class="s-lbl">Courses</div><div class="s-val">'+courses+'</div><div class="s-sub">moy '+(courses/n).toFixed(1)+'/j</div></div><div class="s-card"><div class="s-lbl">Heures</div><div class="s-val">'+m2s(mins)+'</div><div class="s-sub">moy '+m2s(Math.round(mins/n))+'/j</div></div></div>'+compareHtml+'<div class="s-card" style="margin-bottom:10px"><div class="s-lbl">Projection fin de mois</div><div class="s-val" style="font-size:22px">'+projected.toLocaleString('fr')+'€</div><div class="s-sub">sur '+daysInMonth+' jours possibles</div></div><div class="s-card" style="margin-bottom:10px"><div class="s-lbl">Meilleur jour</div><div class="s-val" style="font-size:18px;color:#30D158">Jour '+best.day+' — '+Math.round(best.amount)+'€ · '+best.courses+' courses</div></div><div class="s-card" style="margin-bottom:10px"><div class="s-lbl">Moins bon jour</div><div class="s-val" style="font-size:18px;color:#FF453A">Jour '+worst.day+' — '+Math.round(worst.amount)+'€ · '+worst.courses+' courses</div></div><div class="s-card" style="margin-bottom:10px"><div class="s-lbl">Rendement horaire</div><div class="s-val">'+(mins?(total/(mins/60)).toFixed(2):'—')+'€/h</div></div>';
+}
+function saveObj(){
+  var v=parseFloat(document.getElementById('obj-inp').value);
+  if(!isNaN(v)&&v>0){setObj(v);renderHero();showToast('Objectif enregistre !');}
+}
+function renderExport(){
+  var days=load(),n=days.length;
+  if(!n){document.getElementById('exp-pre').textContent='Aucune donnee a exporter.';return}
+  var total=days.reduce(function(s,d){return s+d.amount},0);
+  var courses=days.reduce(function(s,d){return s+d.courses},0);
+  var mins=days.reduce(function(s,d){return s+(d.durMins||0)},0);
+  var txt='Chiffre '+MONTHS[month]+' '+year+'\n\n';
+  days.forEach(function(d){
+    txt+=(d.day<10?'0':'')+d.day+' - '+(d.courses<10?'0':'')+d.courses+' courses';
+    txt+=' - '+d.start.replace(':','h')+'-'+d.end.replace(':','h')+' - '+Math.round(d.amount)+'€';
+    if(d.workdur)txt+=' ('+d.workdur.replace(':','h')+')';
+    txt+='\n';
+  });
+  txt+='\nChiffres '+Math.round(total)+' €\nMoy chiffres sur '+n+' jours '+Math.round(total/n)+'€ / par jour';
+  txt+='\nCourses '+courses+' en moyenne '+Math.round(courses/n)+'/ jours\nHeures '+m2s(mins)+'\nMoyenne heures '+m2s(Math.round(mins/n));
+  document.getElementById('exp-pre').textContent=txt;
+}
+function copyExport(){
+  var txt=document.getElementById('exp-pre').textContent;
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).then(function(){showToast('Copie!')}).catch(function(){showToast('Erreur')})}
+  else{var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('Copie!')}
+}
+function renderAll(){renderHero();renderDays();renderStats();renderExport()}
+function showTab(name){
+  var names=['saisie','jours','stats','export'];
+  document.querySelectorAll('.tab').forEach(function(t,i){t.classList.toggle('active',names[i]===name)});
+  document.querySelectorAll('.view').forEach(function(v){v.classList.toggle('active',v.id==='view-'+name)});
+}
+document.getElementById('f-day').value=now.getDate();
+updateMonthLabel();calcDur();renderAll();
+</script>
+</body>
+</html>
